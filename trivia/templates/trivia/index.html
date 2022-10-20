@@ -1,0 +1,50 @@
+{% extends "trivia/layout.html" %}
+
+{% block body %}
+hello
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("loaded");
+        document.querySelector('#refresh-question').addEventListener('click', () => refreshRandom());
+
+    });
+
+
+
+    const refreshRandom = () => {
+
+        fetch('https://jservice.io/api/random')
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Response:', data)
+                let currData = data[0];
+                document.getElementById("clueValue").textContent = currData.value;
+                document.getElementById("clueCategory").textContent = currData.category.title;
+                document.getElementById("clueQuestion").textContent = currData.question;
+                document.getElementById("clueAnswer").textContent = currData.answer;
+                document.getElementById("clueAirDate").textContent = currData.airdate;
+                document.getElementById("clueId").textContent = currData.id;
+                document.getElementById("clueRaw").textContent = JSON.stringify(currData);
+            });
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<button id="refresh-question">refresh</button><br>
+value: <li id="clueValue"></li>
+category: <li id="clueCategory"></li>
+question: <li id="clueQuestion"></li>
+answer: <li id="clueAnswer"></li>
+
+{% endblock %}
