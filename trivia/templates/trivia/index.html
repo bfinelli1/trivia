@@ -1,15 +1,34 @@
 {% extends "trivia/layout.html" %}
 
 {% block body %}
-hello
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         console.log("loaded");
         document.querySelector('#refresh-question').addEventListener('click', () => refreshRandom());
-
     });
 
+    function join(element, groupid) {
+        console.log("clicked")
+        id = parseInt(groupid)
+        console.log(typeof groupid, typeof id)
+        // fetch(`/joingroup/${id}`)
+        //     .then(response => response.json())
+        //     .then(group => {
+        //         document.querySelector('#groupname').innerHTML = group.groupname;
+        //         let li = element.parentElement
+        //         li.querySelector('#numparticipants').innerHTML = group.num_participants;
+        //     });
+    }
 
+    function del(element, postid) {
+        id = parseInt(groupid)
+        // fetch(`/like/${postid}`)
+        //     .then(response => response.json())
+        //     .then(post => {
+        //         element.querySelector('#likecount').innerHTML = post.likes;
+        //     });
+    }
 
     const refreshRandom = () => {
 
@@ -46,5 +65,35 @@ value: <li id="clueValue"></li>
 category: <li id="clueCategory"></li>
 question: <li id="clueQuestion"></li>
 answer: <li id="clueAnswer"></li>
+
+
+{% if user.is_authenticated %}
+your group: <span id="groupname">{{profile.group.groupname}}</span><br>
+
+<form action="{% url 'newgroup' %}" method = "post">
+    {% csrf_token %}
+    <label for="fname">Create Group name:</label><br>
+    <input type="text" id="group" name="group"><br>
+    <input type="submit" value="Submit">
+  </form>
+{% endif %}
+
+
+  {% for group in groups %}
+  <li style="list-style:none;margin:20px">
+      <a href="{% url 'joingroup' group.id %}" style="font-weight: bold;color:black;">
+          {{ group.groupname }} lobby, num participants: <span id="numparticipants">{{group.num_participants}}</span></a>
+      <br>
+      {% if user.is_authenticated %}
+          <div onclick="join(this, `{{group.id}}`)" style="color:rgb(73, 73, 225);">join</div>
+          
+
+        <div onclick="del(this, `{{group.id}}`)" style="color:rgb(73, 73, 225);">delete</div>
+      {% endif %}
+  
+  </li>
+  {% endfor %}
+
+
 
 {% endblock %}

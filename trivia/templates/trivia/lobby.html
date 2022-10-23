@@ -1,0 +1,60 @@
+{% extends "trivia/layout.html" %}
+
+{% block body %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("loaded");
+
+        fetch('https://jservice.io/api/categories?count=10')
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Response:', data)
+                for (const currData of data) {
+                    let label = document.createElement('label');
+                    label.innerHTML = `${currData.title} ${currData.id}`;
+                    let input = document.createElement('input');
+                    input.type = "radio";
+                    input.name = "choice";
+                    document.querySelector('#categories').append(input);
+                    document.querySelector('#categories').append(label);
+                    document.querySelector('#categories').append(document.createElement('br'));
+                    
+                    // var radioHtml = '<input type="radio" name="' + currData.title + '"';
+                    // radioHtml += '/>'
+                    // document.querySelector('#categories').innerHTML += radioHtml;
+                }
+                let input = document.createElement('input');
+                input.type = "submit"
+                input.value = "Submit"
+                document.querySelector('#categories').append(input);
+            });
+
+    })
+
+
+   
+
+ 
+                
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+<form action="{%url 'index' %}" method="post" id="categories">{% csrf_token %}</form>
+
+
+
+{% endblock %}
