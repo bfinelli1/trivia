@@ -16,6 +16,7 @@
                     let input = document.createElement('input');
                     input.type = "radio";
                     input.name = "choice";
+                    input.value = currData.id;
                     document.querySelector('#categories').append(input);
                     document.querySelector('#categories').append(label);
                     document.querySelector('#categories').append(document.createElement('br'));
@@ -33,28 +34,10 @@
     })
 
 
-   
-
- 
-                
-
-
-
-
-
-
-
-
-
-
 </script>
 
 
-
-
-
-<form action="{%url 'index' %}" method="post" id="categories">{% csrf_token %}</form>
-
+<form action="{%url 'question' %}" name="choice" method="post" id="categories">{% csrf_token %}</form>
 
 
 {% endblock %}

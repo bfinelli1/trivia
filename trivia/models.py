@@ -21,16 +21,17 @@ class Group(models.Model):
 class User(AbstractUser):
     score = models.PositiveIntegerField(default=0)
     profilepic = models.URLField(null=True)
-    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=True, related_name="participant")
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, related_name="participants")
 
     def __str__(self):
         return f"{self.username} score: {self.score}"
 
 
-class Quiz(models.Model):
-    num_questions = models.PositiveSmallIntegerField(default=0)
-    pass
+# class Quiz(models.Model):
+#     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="quiz_group")
+#     num_questions = models.PositiveSmallIntegerField(default=0)
+#     pass
 
-class Question(models.Model):
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    pass
+# class Question(models.Model):
+#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+#     pass

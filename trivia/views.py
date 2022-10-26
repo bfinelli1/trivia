@@ -15,6 +15,10 @@ def index(request):
         "profile" : request.user
     })
 
+def getGroups(request):
+    groups = Group.objects.all()
+    return JsonResponse([group.serialize() for group in groups], safe=False)
+
 
 def random(request):
     return render(request, 'trivia/index.html')
@@ -24,9 +28,8 @@ def newgroup(request):
         name = request.POST['group']
         myGroup = Group(groupname=name)
         myGroup.save()
+        myGroup.participants.add(request.user)
         user = request.user
-        user.group = myGroup
-        user.save()
     return HttpResponseRedirect(reverse("index"))
 
 def joingroup(request, groupid):
@@ -49,6 +52,21 @@ def joingroup(request, groupid):
 
 def lobby(request):
     return HttpResponseRedirect(reverse("index"))
+
+def question(request):
+    if request.method == "POST":
+        choice = request.POST['choice']
+        print(choice)
+        return render(request, 'trivia/question.html', {
+        "category": choice
+        })
+
+def delete(request, groupid):
+    if Group.objects.filter(pk=groupid).exists():
+        Group.objects.get(pk=groupid).delete()
+    groups = Group.objects.all()
+    
+    return JsonResponse([group.serialize() for group in groups], safe=False)
 
 
 def login_view(request):
