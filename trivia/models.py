@@ -15,7 +15,8 @@ class Group(models.Model):
     def serialize(self):
         return {
             "groupname": self.groupname,
-            "num_participants": self.num_participants
+            "num_participants": self.num_participants,
+            "id": self.pk
         }
 
 class User(AbstractUser):

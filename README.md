@@ -13,3 +13,9 @@ display winner or maybe have tie breaker
 bring users back to home page
 keep track of whether a user has completed each question in the database and only
 allow all users to continue when all users have completed previous question
+
+user logs in
+user starts group
+group chooses a category randomly
+users join group and answer 10 random questions
+users see a leaderboard

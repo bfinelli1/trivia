@@ -6,18 +6,30 @@
     document.addEventListener('DOMContentLoaded', function () {
         console.log("loaded");
         document.querySelector('#refresh-question').addEventListener('click', () => refreshRandom());
+        showgroups();
     });
 
-    function join(element, groupid) {
+    function showgroups() {
         console.log("clicked")
-        id = parseInt(groupid)
-        console.log(typeof groupid, typeof id)
         fetch("/getGroups")
             .then(response => response.json())
             .then(groups => {
                 groups.forEach(group => {
                     const li = document.createElement('li');
-                    li.innerHTML=group.groupname;
+                    li.style = "list-style:none;margin:20px;font-weight: bold;color:black";
+                    li.innerHTML = `join ${group.groupname}`;
+                    id = parseInt(group.id);
+                    li.onclick = function () {
+                        join(group.id);
+                    }
+                    
+                    const div = document.createElement('div');
+                    div.onclick = function () {
+                        del(div, group.id);
+                    }
+                    div.innerHTML = "Delete";
+                    div.style = "font-weight: normal;color:rgb(73, 73, 225);";
+                    li.append(div);
 
                     document.querySelector('#groupname').append(li);
 
@@ -32,9 +44,13 @@
         fetch(`/delete/${groupid}`)
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
+            console.log(data, groupid);
         })
+        location.reload();
+    }
 
+    function join(groupid) {
+        window.location.href = "joingroup/" + groupid;
     }
 
     const refreshRandom = () => {
@@ -75,7 +91,7 @@ answer: <li id="clueAnswer"></li>
 
 
 {% if user.is_authenticated %}
-your group: <span id="groupname">{{profile.group.groupname}}</span><br>
+<!-- your group: <span id="groupname">{{profile.group.groupname}}</span><br> -->
 
 <form action="{% url 'newgroup' %}" method = "post">
     {% csrf_token %}
@@ -87,20 +103,7 @@ your group: <span id="groupname">{{profile.group.groupname}}</span><br>
 
 <div id="groupname"></div>
 
-  {% for group in groups %}
-  <li style="list-style:none;margin:20px">
-      <a href="{% url 'joingroup' group.id %}" style="font-weight: bold;color:black;">
-          {{ group.groupname }} lobby, num participants: <span id="numparticipants">{{group.num_participants}}</span></a>
-      <br>
-      {% if user.is_authenticated %}
-          <div onclick="join(this, `{{group.id}}`)" style="color:rgb(73, 73, 225);">join</div>
-          
 
-        <div onclick="del(this, `{{group.id}}`)" style="color:rgb(73, 73, 225);">delete</div>
-      {% endif %}
-  
-  </li>
-  {% endfor %}
 
 
 
