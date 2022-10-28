@@ -11,5 +11,7 @@ urlpatterns = [
     path("joingroup/<int:groupid>", views.joingroup, name="joingroup"),
     path("question", views.question, name="question"),
     path("delete/<int:groupid>", views.delete, name="delete"),
-    path("getGroups", views.getGroups, name="getGroups")
+    path("getGroups", views.getGroups, name="getGroups"),
+    path("score", views.score, name="score"),
+    path("newscore", views.newscore, name="newscore")
 ]

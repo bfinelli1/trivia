@@ -4,9 +4,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Group
+from .models import User, Group, Scores
 from django.http import JsonResponse
 import requests
+import json
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 # Create your views here.
@@ -52,6 +55,7 @@ def joingroup(request, groupid):
     #         user.group.num_participants = user.group.num_participants - 1
     #         user.group.save()
     group = Group.objects.get(pk=groupid)
+    scores = Scores.objects.filter(group_id=groupid).all()
     # print(group.groupname)
     # user.group = group
     # user.save()
@@ -62,11 +66,34 @@ def joingroup(request, groupid):
         "groupid" : groupid,
         "groupname" : group.groupname,
         "categoryname" : group.categoryname,
-        "categoryid" : group.categoryid
+        "categoryid" : group.categoryid,
+        "scores" : scores
     })
 
 def lobby(request):
     return HttpResponseRedirect(reverse("index"))
+
+@csrf_exempt
+def score(request):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        print(data.get("number"), data.get("gameid"))
+        if data.get("number") is not None:
+            score = Scores.objects.get(pk=int(data.get("gameid")))
+            score.numscore = score.numscore+int(data.get("number"))
+            score.numcompleted = score.numcompleted+1
+            score.save()
+    return JsonResponse(score.serialize(), safe=False)
+
+@csrf_exempt
+def newscore(request):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        group = Group.objects.get(pk=int(data.get("groupid")))
+        score = Scores(group=group, user=request.user)
+        score.save()
+    return JsonResponse(score.serialize(), safe=False)
+
 
 def question(request):
     if request.method == "POST":

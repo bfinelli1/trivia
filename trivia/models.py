@@ -31,11 +31,18 @@ class User(AbstractUser):
         return f"{self.username} score: {self.score}"
 
 
-# class Quiz(models.Model):
-#     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="quiz_group")
-#     num_questions = models.PositiveSmallIntegerField(default=0)
-#     pass
+class Scores(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="quiz_group")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="participant")
+    numscore = models.PositiveIntegerField(default=0)
+    numcompleted = models.PositiveIntegerField(default=0)
 
-# class Question(models.Model):
-#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-#     pass
+    def serialize(self):
+        return {
+            "groupname": self.group.groupname,
+            "groupid": self.group.pk,
+            "user": self.user.username,
+            "id": self.pk,
+            "numscore": self.numscore,
+            "numcompleted": self.numcompleted
+    }

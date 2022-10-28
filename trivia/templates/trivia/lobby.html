@@ -4,6 +4,7 @@
 
 <script>
     let actualanswer=0
+    let gameid=0
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelector("#question").style.display = 'none';
         document.querySelector('#leaderboard').style.display = 'block';
@@ -41,7 +42,23 @@
         //     });
 
     })
+
+    function newscore(groupid) {
+        fetch('/newscore', {
+            method: 'PUT',
+            body: JSON.stringify({
+                groupid: groupid
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            gameid = data.id
+        });
+    }
+
     function loadquestion() {
+        newscore("{{groupid}}");
         document.querySelector('#leaderboard').style.display = 'none';
         document.querySelector("#question").style.display = 'block';
         console.log("question");
@@ -73,15 +90,35 @@
                 const rndInt = Math.floor(Math.random() * 4) + 1
                 actualanswer=rndInt-1
 
-                document.getElementById("clueValue").textContent = questions[rndInt-1].value;
-                document.getElementById("clueCategory").textContent = questions[rndInt-1].category.title;
+                // document.getElementById("clueValue").textContent = questions[rndInt-1].value;
+                document.getElementById("clueCategory").textContent = "Category: " + questions[rndInt-1].category.title;
                 document.getElementById("clueQuestion").textContent = questions[rndInt-1].question;
-                document.getElementById("clueAnswer1").textContent = questions[0].answer+questions[0].id;
-                document.getElementById("clueAnswer2").textContent = questions[1].answer+questions[1].id;
-                document.getElementById("clueAnswer3").textContent = questions[2].answer+questions[2].id;
-                document.getElementById("clueAnswer4").textContent = questions[3].answer+questions[3].id;
+                document.getElementById("clueAnswer1").textContent = questions[0].answer;
+                document.getElementById("clueAnswer2").textContent = questions[1].answer;
+                document.getElementById("clueAnswer3").textContent = questions[2].answer;
+                document.getElementById("clueAnswer4").textContent = questions[3].answer;
             });
     };
+
+    function answer(num, gameid) {
+        fetch('/score', {
+            method: 'PUT',
+            body: JSON.stringify({
+                number: num,
+                gameid: gameid
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.numcompleted >= 10) {
+                console.log("completed");
+                document.querySelector("#question").style.display = 'none';
+                document.querySelector('#leaderboard').style.display = 'block';
+                location.reload();
+            }
+        });
+    }
 
     function submitanswer() {
         var givenanswer = document.querySelector('input[name="answers"]:checked').value; 
@@ -90,9 +127,10 @@
         console.log(givenanswer, actualanswer+1);
         if (givenanswer == actualanswer+1) {
             console.log("correct");
+            answer(1, gameid);
         }
         else {
-            console.log("incorrect");
+            answer(0, gameid);
         }
         refreshRandom();
     }
@@ -104,18 +142,22 @@
 
 <!-- <form action="{%url 'question' %}" name="choice" method="post" id="categories">{% csrf_token %}</form> -->
 
-{{groupname}} {{categoryname}}<br>
+<h4 id="clueCategory"></h4>
 
 <div id="leaderboard">Leader Board <br>
 
+    {% for score in scores %}
+        {{score.user.username}} score: {{score.numscore}} correct <br>
+    {% endfor %}
+<br>
     <button onclick="loadquestion()">first question</button>
 </div>
 
-<div id="question">Trivia question:<br>
+<div id="question"><br>
 
-    <span id="clueCategory"></span>
+    
     <h3 id="clueQuestion"></h3>
-    value: <span id="clueValue"></span>
+    <!-- value: <span id="clueValue"></span> -->
     <br><br>
 
     <form action="javascript:;" onsubmit="submitanswer();" name="choice" method="post" id="categories">
@@ -136,7 +178,7 @@
 
     </form>
 
-    <button onclick="loadquestion()">next question</button>
+    
 </div>
 
 
