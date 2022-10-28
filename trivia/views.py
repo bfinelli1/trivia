@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import User, Group
 from django.http import JsonResponse
+import requests
 
 
 # Create your views here.
@@ -30,6 +31,17 @@ def newgroup(request):
         myGroup.save()
         myGroup.participants.add(request.user)
         user = request.user
+        qlistlength = 0
+        while qlistlength<10: #check if there are too few qs in the category
+            response = requests.get("https://jservice.io/api/random")
+            categoryid = response.json()[0]['category_id']
+            categoryname = response.json()[0]['category']['title']
+            questionlist = requests.get(f"https://jservice.io/api/clues?category={categoryid}")
+            print(f"{categoryid} amount in category: {len(questionlist.json())}")
+            qlistlength = len(questionlist.json())
+        myGroup.categoryid = categoryid
+        myGroup.categoryname = categoryname
+        myGroup.save()
     return HttpResponseRedirect(reverse("index"))
 
 def joingroup(request, groupid):
@@ -39,7 +51,7 @@ def joingroup(request, groupid):
     #     if user.group.num_participants > 0:
     #         user.group.num_participants = user.group.num_participants - 1
     #         user.group.save()
-    # group = Group.objects.get(pk=groupid)
+    group = Group.objects.get(pk=groupid)
     # print(group.groupname)
     # user.group = group
     # user.save()
@@ -47,7 +59,10 @@ def joingroup(request, groupid):
     # print(group.num_participants)
     # group.save()
     return render(request, "trivia/lobby.html", {
-        "groupid" : groupid
+        "groupid" : groupid,
+        "groupname" : group.groupname,
+        "categoryname" : group.categoryname,
+        "categoryid" : group.categoryid
     })
 
 def lobby(request):

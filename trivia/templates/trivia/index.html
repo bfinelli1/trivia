@@ -5,7 +5,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         console.log("loaded");
-        document.querySelector('#refresh-question').addEventListener('click', () => refreshRandom());
+        // document.querySelector('#refresh-question').addEventListener('click', () => refreshRandom());
         showgroups();
     });
 
@@ -15,9 +15,10 @@
             .then(response => response.json())
             .then(groups => {
                 groups.forEach(group => {
+                    const parent = document.createElement('div');
                     const li = document.createElement('li');
-                    li.style = "list-style:none;margin:20px;font-weight: bold;color:black";
-                    li.innerHTML = `join ${group.groupname}`;
+                    li.style = "list-style:none;margin:20px;font-weight: bold;color:rgb(73, 73, 225);";
+                    li.innerHTML = `Quiz category: ${group.categoryname}`;
                     id = parseInt(group.id);
                     li.onclick = function () {
                         join(group.id);
@@ -29,9 +30,10 @@
                     }
                     div.innerHTML = "Delete";
                     div.style = "font-weight: normal;color:rgb(73, 73, 225);";
-                    li.append(div);
+                    parent.append(li);
+                    parent.append(div);
 
-                    document.querySelector('#groupname').append(li);
+                    document.querySelector('#groupname').append(parent);
 
                 })
                 // let li = element.parentElement
@@ -83,11 +85,11 @@
 
 </script>
 
-<button id="refresh-question">refresh</button><br>
+<!-- <button id="refresh-question">refresh</button><br>
 value: <li id="clueValue"></li>
 category: <li id="clueCategory"></li>
 question: <li id="clueQuestion"></li>
-answer: <li id="clueAnswer"></li>
+answer: <li id="clueAnswer"></li> -->
 
 
 {% if user.is_authenticated %}
@@ -95,9 +97,7 @@ answer: <li id="clueAnswer"></li>
 
 <form action="{% url 'newgroup' %}" method = "post">
     {% csrf_token %}
-    <label for="fname">Create Group name:</label><br>
-    <input type="text" id="group" name="group"><br>
-    <input type="submit" value="Submit">
+    <input type="submit" id = "group" name="group" value="Create Quiz">
   </form>
 {% endif %}
 

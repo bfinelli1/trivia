@@ -8,6 +8,8 @@ class Group(models.Model):
     num_participants = models.PositiveSmallIntegerField(default=0)
     maxparticipants = models.PositiveSmallIntegerField(default=8)
     qendtime = models.DateTimeField(default=timezone.now)
+    categoryid = models.PositiveSmallIntegerField(default=0)
+    categoryname = models. CharField(max_length=256, default="")
 
     def __str__(self):
         return f"{self.groupname}"
@@ -16,7 +18,8 @@ class Group(models.Model):
         return {
             "groupname": self.groupname,
             "num_participants": self.num_participants,
-            "id": self.pk
+            "id": self.pk,
+            "categoryname": self.categoryname
         }
 
 class User(AbstractUser):

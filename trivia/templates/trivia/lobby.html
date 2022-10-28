@@ -3,42 +3,144 @@
 {% block body %}
 
 <script>
+    let actualanswer=0
     document.addEventListener('DOMContentLoaded', function () {
-        console.log("loaded");
+        document.querySelector("#question").style.display = 'none';
+        document.querySelector('#leaderboard').style.display = 'block';
+        console.log("{{categoryid}}");
 
-        fetch('https://jservice.io/api/categories?count=10')
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Response:', data)
-                for (const currData of data) {
-                    let label = document.createElement('label');
-                    label.innerHTML = `${currData.title} ${currData.id}`;
-                    let input = document.createElement('input');
-                    input.type = "radio";
-                    input.name = "choice";
-                    input.value = currData.id;
-                    document.querySelector('#categories').append(input);
-                    document.querySelector('#categories').append(label);
-                    document.querySelector('#categories').append(document.createElement('br'));
-                    
-                    // var radioHtml = '<input type="radio" name="' + currData.title + '"';
-                    // radioHtml += '/>'
-                    // document.querySelector('#categories').innerHTML += radioHtml;
-                }
-                let input = document.createElement('input');
-                input.type = "submit"
-                input.value = "Submit"
-                document.querySelector('#categories').append(input);
-            });
+
+
+
+
+
+
+        // fetch('https://jservice.io/api/categories?count=10')
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         console.log('Response:', data)
+        //         for (const currData of data) {
+        //             let label = document.createElement('label');
+        //             label.innerHTML = `${currData.title} ${currData.id}`;
+        //             let input = document.createElement('input');
+        //             input.type = "radio";
+        //             input.name = "choice";
+        //             input.value = currData.id;
+        //             document.querySelector('#categories').append(input);
+        //             document.querySelector('#categories').append(label);
+        //             document.querySelector('#categories').append(document.createElement('br'));
+
+        //             // var radioHtml = '<input type="radio" name="' + currData.title + '"';
+        //             // radioHtml += '/>'
+        //             // document.querySelector('#categories').innerHTML += radioHtml;
+        //         }
+        //         let input = document.createElement('input');
+        //         input.type = "submit"
+        //         input.value = "Submit"
+        //         document.querySelector('#categories').append(input);
+        //     });
 
     })
+    function loadquestion() {
+        document.querySelector('#leaderboard').style.display = 'none';
+        document.querySelector("#question").style.display = 'block';
+        console.log("question");
+        refreshRandom();
+        // fetch
+    }
+
+    const refreshRandom = () => {
+        id = "{{categoryid}}";
+        let url = "https://jservice.io/api/clues?category=" + id;
+        fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+                // console.log('Response:', data)
+                let questions = [];
+                let questionids = [];
+                q=data[Math.floor(Math.random() * data.length)]
+                text=q.answer
+                for (var i = 0; i < 4; i++) {
+                    while (questionids.includes(text) ){
+                        q = data[Math.floor(Math.random() * data.length)];
+                        // console.log(q)
+                        text = q.answer;
+                    }
+                    questionids.push(text);
+                    questions[i] = q;
+                }
+                // console.log(questions);
+                const rndInt = Math.floor(Math.random() * 4) + 1
+                actualanswer=rndInt-1
+
+                document.getElementById("clueValue").textContent = questions[rndInt-1].value;
+                document.getElementById("clueCategory").textContent = questions[rndInt-1].category.title;
+                document.getElementById("clueQuestion").textContent = questions[rndInt-1].question;
+                document.getElementById("clueAnswer1").textContent = questions[0].answer+questions[0].id;
+                document.getElementById("clueAnswer2").textContent = questions[1].answer+questions[1].id;
+                document.getElementById("clueAnswer3").textContent = questions[2].answer+questions[2].id;
+                document.getElementById("clueAnswer4").textContent = questions[3].answer+questions[3].id;
+            });
+    };
+
+    function submitanswer() {
+        var givenanswer = document.querySelector('input[name="answers"]:checked').value; 
+        document.querySelector('input[name="answers"]:checked').checked = false;
+        console.log(givenanswer);
+        console.log(givenanswer, actualanswer+1);
+        if (givenanswer == actualanswer+1) {
+            console.log("correct");
+        }
+        else {
+            console.log("incorrect");
+        }
+        refreshRandom();
+    }
+
 
 
 </script>
 
-<h2>Choose a category</h2>
 
-<form action="{%url 'question' %}" name="choice" method="post" id="categories">{% csrf_token %}</form>
+<!-- <form action="{%url 'question' %}" name="choice" method="post" id="categories">{% csrf_token %}</form> -->
+
+{{groupname}} {{categoryname}}<br>
+
+<div id="leaderboard">Leader Board <br>
+
+    <button onclick="loadquestion()">first question</button>
+</div>
+
+<div id="question">Trivia question:<br>
+
+    <span id="clueCategory"></span>
+    <h3 id="clueQuestion"></h3>
+    value: <span id="clueValue"></span>
+    <br><br>
+
+    <form action="javascript:;" onsubmit="submitanswer();" name="choice" method="post" id="categories">
+        {% csrf_token %}
+
+        <input type="radio" id="answer1" name="answers" value="1">
+        <label id="clueAnswer1" for="answer1"></label><br>
+
+        <input type="radio" id="answer2" name="answers" value="2">
+        <label id="clueAnswer2" for="answer2"></label><br>
+
+        <input type="radio" id="answer3" name="answers" value="3">
+        <label id="clueAnswer3" for="answer3"></label><br>
+
+        <input type="radio" id="answer4" name="answers" value="4">
+        <label id="clueAnswer4" for="answer4"></label><br>
+        <input class="btn btn-primary" type="submit" value="submit">
+
+    </form>
+
+    <button onclick="loadquestion()">next question</button>
+</div>
+
+
+
 
 
 {% endblock %}
