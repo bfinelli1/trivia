@@ -10,37 +10,6 @@
         document.querySelector('#leaderboard').style.display = 'block';
         console.log("{{categoryid}}");
 
-
-
-
-
-
-
-        // fetch('https://jservice.io/api/categories?count=10')
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //         console.log('Response:', data)
-        //         for (const currData of data) {
-        //             let label = document.createElement('label');
-        //             label.innerHTML = `${currData.title} ${currData.id}`;
-        //             let input = document.createElement('input');
-        //             input.type = "radio";
-        //             input.name = "choice";
-        //             input.value = currData.id;
-        //             document.querySelector('#categories').append(input);
-        //             document.querySelector('#categories').append(label);
-        //             document.querySelector('#categories').append(document.createElement('br'));
-
-        //             // var radioHtml = '<input type="radio" name="' + currData.title + '"';
-        //             // radioHtml += '/>'
-        //             // document.querySelector('#categories').innerHTML += radioHtml;
-        //         }
-        //         let input = document.createElement('input');
-        //         input.type = "submit"
-        //         input.value = "Submit"
-        //         document.querySelector('#categories').append(input);
-        //     });
-
     })
 
     function newscore(groupid) {
@@ -140,8 +109,6 @@
 </script>
 
 
-<!-- <form action="{%url 'question' %}" name="choice" method="post" id="categories">{% csrf_token %}</form> -->
-
 <h4 id="clueCategory"></h4>
 
 <div id="leaderboard">Leader Board <br>
@@ -157,7 +124,6 @@
 
     
     <h3 id="clueQuestion"></h3>
-    <!-- value: <span id="clueValue"></span> -->
     <br><br>
 
     <form action="javascript:;" onsubmit="submitanswer();" name="choice" method="post" id="categories">

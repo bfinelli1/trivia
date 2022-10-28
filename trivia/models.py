@@ -5,9 +5,6 @@ from django.utils import timezone
 
 class Group(models.Model):
     groupname = models.CharField(max_length=24)
-    num_participants = models.PositiveSmallIntegerField(default=0)
-    maxparticipants = models.PositiveSmallIntegerField(default=8)
-    qendtime = models.DateTimeField(default=timezone.now)
     categoryid = models.PositiveSmallIntegerField(default=0)
     categoryname = models. CharField(max_length=256, default="")
 
@@ -17,7 +14,6 @@ class Group(models.Model):
     def serialize(self):
         return {
             "groupname": self.groupname,
-            "num_participants": self.num_participants,
             "id": self.pk,
             "categoryname": self.categoryname
         }

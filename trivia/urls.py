@@ -9,7 +9,6 @@ urlpatterns = [
     path('random', views.random, name='random'),
     path("newgroup", views.newgroup, name="newgroup"),
     path("joingroup/<int:groupid>", views.joingroup, name="joingroup"),
-    path("question", views.question, name="question"),
     path("delete/<int:groupid>", views.delete, name="delete"),
     path("getGroups", views.getGroups, name="getGroups"),
     path("score", views.score, name="score"),

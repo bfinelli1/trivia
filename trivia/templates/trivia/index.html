@@ -5,7 +5,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         console.log("loaded");
-        // document.querySelector('#refresh-question').addEventListener('click', () => refreshRandom());
         showgroups();
     });
 
@@ -36,8 +35,7 @@
                     document.querySelector('#groupname').append(parent);
 
                 })
-                // let li = element.parentElement
-                // li.querySelector('#numparticipants').innerHTML = group.num_participants;
+
             });
     }
 
@@ -74,26 +72,10 @@
 
 
 
-
-
-
-
-
-
-
-
-
 </script>
-
-<!-- <button id="refresh-question">refresh</button><br>
-value: <li id="clueValue"></li>
-category: <li id="clueCategory"></li>
-question: <li id="clueQuestion"></li>
-answer: <li id="clueAnswer"></li> -->
 
 
 {% if user.is_authenticated %}
-<!-- your group: <span id="groupname">{{profile.group.groupname}}</span><br> -->
 
 <form action="{% url 'newgroup' %}" method = "post">
     {% csrf_token %}

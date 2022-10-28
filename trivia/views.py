@@ -48,20 +48,8 @@ def newgroup(request):
     return HttpResponseRedirect(reverse("index"))
 
 def joingroup(request, groupid):
-    # user = request.user
-    # if user.group:
-    #     print(user.group.groupname)
-    #     if user.group.num_participants > 0:
-    #         user.group.num_participants = user.group.num_participants - 1
-    #         user.group.save()
     group = Group.objects.get(pk=groupid)
     scores = Scores.objects.filter(group_id=groupid).all()
-    # print(group.groupname)
-    # user.group = group
-    # user.save()
-    # group.num_participants = group.num_participants + 1
-    # print(group.num_participants)
-    # group.save()
     return render(request, "trivia/lobby.html", {
         "groupid" : groupid,
         "groupname" : group.groupname,
@@ -95,13 +83,7 @@ def newscore(request):
     return JsonResponse(score.serialize(), safe=False)
 
 
-def question(request):
-    if request.method == "POST":
-        choice = request.POST['choice']
-        print(choice)
-        return render(request, 'trivia/question.html', {
-        "category": choice
-        })
+
 
 def delete(request, groupid):
     if Group.objects.filter(pk=groupid).exists():
