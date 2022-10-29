@@ -6,10 +6,16 @@
     let actualanswer=0;
     let gameid=0;
     let globalquestionids=[];
+    let count = 0;
     document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector("#incorrect").style.display = 'none';
+        document.querySelector('#correct').style.display = 'none';
         document.querySelector("#question").style.display = 'none';
         document.querySelector('#leaderboard').style.display = 'block';
+        document.querySelector('#nextbutton').style.display='none';
+        document.querySelector('#count').innerHTML = count;
         console.log("{{categoryid}}");
+
 
     })
 
@@ -36,6 +42,11 @@
     }
 
     const refreshRandom = () => {
+        document.querySelector('#count').innerHTML = ++count;
+        document.querySelector("#incorrect").style.display = 'none';
+        document.querySelector('#correct').style.display = 'none';
+        document.querySelector('#nextbutton').style.display='none';
+        document.querySelector('#button').style.display='block';
         id = "{{categoryid}}";
         let url = "https://jservice.io/api/clues?category=" + id;
         fetch(url)
@@ -88,17 +99,30 @@
     function submitanswer() {
         var givenanswer = document.querySelector('input[name="answers"]:checked').value; 
         document.querySelector('input[name="answers"]:checked').checked = false;
+        
         console.log(givenanswer);
         console.log(givenanswer, actualanswer+1);
         if (givenanswer == actualanswer+1) {
             console.log("correct");
             answer(1, gameid);
+            document.querySelector("#incorrect").style.display = 'none';
+            document.querySelector('#correct').style.display = 'block';
+            document.querySelector('#correct').innerHTML = "Correct!"
+            document.querySelector('#button').style.display='none';
+            document.querySelector('#nextbutton').style.display='block';
         }
         else {
             answer(0, gameid);
+            document.querySelector("#incorrect").style.display = 'block';
+            document.querySelector('#correct').style.display = 'none';
+            document.querySelector('#incorrect').innerHTML = `Incorrect. the correct choice was ${actualanswer+1}`
+            document.querySelector('#button').style.display='none';
+            document.querySelector('#nextbutton').style.display='block';
         }
-        refreshRandom();
+        //refreshRandom();
     }
+
+
 
 
 
@@ -120,7 +144,7 @@
 <div id="question"><br>
 
     
-    <h3 id="clueQuestion"></h3>
+    <h3><span id="count">0</span></h3>    <h3 id="clueQuestion"></h3>
     <br><br>
 
     <form action="javascript:;" onsubmit="submitanswer();" name="choice" method="post" id="categories">
@@ -137,7 +161,7 @@
 
         <input type="radio" id="answer4" name="answers" value="4">
         <label id="clueAnswer4" for="answer4"></label><br>
-        <input class="btn btn-primary" type="submit" value="submit">
+        <input class="btn btn-primary" type="submit" value="submit" id="button">
 
     </form>
 
@@ -146,6 +170,8 @@
 
 
 <div id="correct"></div>
+<div id="incorrect"></div>
+<button onclick="refreshRandom();" id="nextbutton">Next</button>
 
 
 
