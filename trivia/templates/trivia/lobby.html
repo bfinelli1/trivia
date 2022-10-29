@@ -56,16 +56,20 @@
                 let questionids = [];
                 q=data[Math.floor(Math.random() * data.length)]
                 text=q.answer
+                id=q.id
                 for (var i = 0; i < 4; i++) {
-                    while (questionids.includes(text) ){ // || globalquestionids.includes(text) !!need to make sure it's also not in global list and add chosen question to global list
+                    while (questionids.includes(text) || globalquestionids.includes(id) ){ // || globalquestionids.includes(text) !!need to make sure it's also not in global list and add chosen question to global list
                         q = data[Math.floor(Math.random() * data.length)];
                         text = q.answer;
+                        id=q.id
                     }
                     questionids.push(text);
                     questions[i] = q;
                 }
                 const rndInt = Math.floor(Math.random() * 4) + 1
                 actualanswer=rndInt-1
+                globalquestionids.push(questions[rndInt-1].id);
+
 
                 document.getElementById("clueCategory").textContent = "Category: " + questions[rndInt-1].category.title;
                 document.getElementById("clueQuestion").textContent = questions[rndInt-1].question;

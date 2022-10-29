@@ -31,7 +31,6 @@ class Scores(models.Model):
 
     def serialize(self):
         return {
-            "groupname": self.group.groupname,
             "groupid": self.group.pk,
             "user": self.user.username,
             "id": self.pk,

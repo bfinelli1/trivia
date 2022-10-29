@@ -6,7 +6,7 @@ TODO:
 display correct or incorrect and correct answer - check
 have profile page with user's leaderboard - check
 disallow duplicate questions
-disallow duplicate categories
+disallow duplicate categories - check
 try to use postgres
 try to use docker
 try to host on iis
