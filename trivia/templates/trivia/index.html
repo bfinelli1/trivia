@@ -25,7 +25,7 @@
                     
                     const div = document.createElement('div');
                     div.onclick = function () {
-                        del(div, group.id);
+                        del(group.id);
                     }
                     div.innerHTML = "Delete";
                     div.style = "font-weight: normal;color:rgb(73, 73, 225);";
@@ -39,14 +39,28 @@
             });
     }
 
-    function del(element, groupid) {
+    // fetch('/newscore', {
+    //         method: 'PUT',
+    //         body: JSON.stringify({
+    //             groupid: groupid
+    //         })
+    //     })
+
+    function del(groupid) {
         id = parseInt(groupid)
-        fetch(`/delete/${groupid}`)
+        fetch('/delete', {
+            method: 'PUT',
+            body: JSON.stringify({
+                groupid: groupid,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            })
+        })
         .then((response) => response.json())
         .then((data) => {
             console.log(data, groupid);
+            location.reload();
         })
-        location.reload();
+        
     }
 
     function join(groupid) {

@@ -89,6 +89,16 @@ def newscore(request):
         score.save()
     return JsonResponse(score.serialize(), safe=False)
 
+@csrf_exempt
+def delete(request):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        groupid=int(data.get("groupid"))
+    if Group.objects.filter(pk=groupid).exists():
+        Group.objects.get(pk=groupid).delete()
+    groups = Group.objects.all()
+    return JsonResponse([group.serialize() for group in groups], safe=False)
+
 
 def profile(request, username):
     scores = Scores.objects.filter(user=User.objects.get(username=username)).all()
@@ -97,12 +107,6 @@ def profile(request, username):
         "profile" : username
     })
 
-def delete(request, groupid):
-    if Group.objects.filter(pk=groupid).exists():
-        Group.objects.get(pk=groupid).delete()
-    groups = Group.objects.all()
-    
-    return JsonResponse([group.serialize() for group in groups], safe=False)
 
 
 def login_view(request):
