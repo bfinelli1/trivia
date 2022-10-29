@@ -3,8 +3,9 @@
 {% block body %}
 
 <script>
-    let actualanswer=0
-    let gameid=0
+    let actualanswer=0;
+    let gameid=0;
+    let globalquestionids=[];
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelector("#question").style.display = 'none';
         document.querySelector('#leaderboard').style.display = 'block';
@@ -45,7 +46,7 @@
                 q=data[Math.floor(Math.random() * data.length)]
                 text=q.answer
                 for (var i = 0; i < 4; i++) {
-                    while (questionids.includes(text) ){
+                    while (questionids.includes(text) ){ // || globalquestionids.includes(text) !!need to make sure it's also not in global list and add chosen question to global list
                         q = data[Math.floor(Math.random() * data.length)];
                         text = q.answer;
                     }
@@ -106,7 +107,8 @@
 
 <h4 id="clueCategory"></h4>
 
-<div id="leaderboard">Leader Board <br>
+<div id="leaderboard"><h4>{{categoryname}}</h4><br>
+    <h5>Leader Board</h5> <br>
 
     {% for score in scores %}
     <a href="{% url 'profile' score.user.username %}"> {{score.user.username}}</a> score: {{score.numscore}} correct <br>

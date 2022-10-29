@@ -36,7 +36,7 @@ def newgroup(request):
         myGroup.participants.add(request.user)
         user = request.user
         qlistlength = 0
-        while qlistlength<10: #check if there are too few qs in the category
+        while qlistlength<20: #check if there are too few qs in the category
             response = requests.get("https://jservice.io/api/random")
             categoryid = response.json()[0]['category_id']
             categoryname = response.json()[0]['category']['title']
@@ -85,8 +85,9 @@ def newscore(request):
 
 
 def profile(request, username):
-        return render(request, 'trivia/profile.html', {
-        "scores" : Scores.objects.filter(user=User.objects.get(username=username)).all(),
+    scores = Scores.objects.filter(user=User.objects.get(username=username)).all()
+    return render(request, 'trivia/profile.html', {
+        "scores" : scores,
         "profile" : username
     })
 
