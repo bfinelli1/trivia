@@ -30,22 +30,29 @@ def random(request):
 
 def newgroup(request):
     if request.method == "POST":
-        name = request.POST['group']
-        myGroup = Group(groupname=name)
-        myGroup.save()
-        myGroup.participants.add(request.user)
-        user = request.user
+        categoryid=0
+        count=0
+
+        categoryids = Group.objects.all().values_list('categoryid', flat=True)
+        print(categoryids)
         qlistlength = 0
-        while qlistlength<20: #check if there are too few qs in the category
+        while qlistlength<20 or (categoryid in categoryids) and count < 5: #check if there are too few qs in the category
             response = requests.get("https://jservice.io/api/random")
             categoryid = response.json()[0]['category_id']
             categoryname = response.json()[0]['category']['title']
             questionlist = requests.get(f"https://jservice.io/api/clues?category={categoryid}")
             print(f"{categoryid} amount in category: {len(questionlist.json())}")
             qlistlength = len(questionlist.json())
-        myGroup.categoryid = categoryid
-        myGroup.categoryname = categoryname
-        myGroup.save()
+            count +=1
+        if count >=5:
+            print("didnt find a category")
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            myGroup = Group()
+            myGroup.save()
+            myGroup.categoryid = categoryid
+            myGroup.categoryname = categoryname
+            myGroup.save()
     return HttpResponseRedirect(reverse("index"))
 
 def joingroup(request, groupid):
@@ -53,7 +60,6 @@ def joingroup(request, groupid):
     scores = Scores.objects.filter(group_id=groupid).all()
     return render(request, "trivia/lobby.html", {
         "groupid" : groupid,
-        "groupname" : group.groupname,
         "categoryname" : group.categoryname,
         "categoryid" : group.categoryid,
         "scores" : scores

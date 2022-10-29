@@ -4,24 +4,20 @@ from django.utils import timezone
 
 
 class Group(models.Model):
-    groupname = models.CharField(max_length=24)
     categoryid = models.PositiveSmallIntegerField(default=0)
     categoryname = models.CharField(max_length=256, default="")
 
     def __str__(self):
-        return f"{self.groupname}"
+        return f"{self.categoryname}, {self.categoryid}"
 
     def serialize(self):
         return {
-            "groupname": self.groupname,
             "id": self.pk,
             "categoryname": self.categoryname
         }
 
 class User(AbstractUser):
-    score = models.PositiveIntegerField(default=0)
     profilepic = models.URLField(null=True)
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, related_name="participants")
 
     def __str__(self):
         return f"{self.username} score: {self.score}"
