@@ -1,3 +1,4 @@
+from curses.ascii import US
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -83,7 +84,11 @@ def newscore(request):
     return JsonResponse(score.serialize(), safe=False)
 
 
-
+def profile(request, username):
+        return render(request, 'trivia/profile.html', {
+        "scores" : Scores.objects.filter(user=User.objects.get(username=username)).all(),
+        "profile" : username
+    })
 
 def delete(request, groupid):
     if Group.objects.filter(pk=groupid).exists():

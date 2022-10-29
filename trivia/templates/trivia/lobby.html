@@ -32,7 +32,6 @@
         document.querySelector("#question").style.display = 'block';
         console.log("question");
         refreshRandom();
-        // fetch
     }
 
     const refreshRandom = () => {
@@ -41,7 +40,6 @@
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
-                // console.log('Response:', data)
                 let questions = [];
                 let questionids = [];
                 q=data[Math.floor(Math.random() * data.length)]
@@ -49,17 +47,14 @@
                 for (var i = 0; i < 4; i++) {
                     while (questionids.includes(text) ){
                         q = data[Math.floor(Math.random() * data.length)];
-                        // console.log(q)
                         text = q.answer;
                     }
                     questionids.push(text);
                     questions[i] = q;
                 }
-                // console.log(questions);
                 const rndInt = Math.floor(Math.random() * 4) + 1
                 actualanswer=rndInt-1
 
-                // document.getElementById("clueValue").textContent = questions[rndInt-1].value;
                 document.getElementById("clueCategory").textContent = "Category: " + questions[rndInt-1].category.title;
                 document.getElementById("clueQuestion").textContent = questions[rndInt-1].question;
                 document.getElementById("clueAnswer1").textContent = questions[0].answer;
@@ -114,7 +109,7 @@
 <div id="leaderboard">Leader Board <br>
 
     {% for score in scores %}
-        {{score.user.username}} score: {{score.numscore}} correct <br>
+    <a href="{% url 'profile' score.user.username %}"> {{score.user.username}}</a> score: {{score.numscore}} correct <br>
     {% endfor %}
 <br>
     <button onclick="loadquestion()">first question</button>
@@ -146,6 +141,9 @@
 
     
 </div>
+
+
+<div id="correct"></div>
 
 
 

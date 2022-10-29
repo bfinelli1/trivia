@@ -6,7 +6,7 @@ from django.utils import timezone
 class Group(models.Model):
     groupname = models.CharField(max_length=24)
     categoryid = models.PositiveSmallIntegerField(default=0)
-    categoryname = models. CharField(max_length=256, default="")
+    categoryname = models.CharField(max_length=256, default="")
 
     def __str__(self):
         return f"{self.groupname}"

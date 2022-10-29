@@ -12,5 +12,6 @@ urlpatterns = [
     path("delete/<int:groupid>", views.delete, name="delete"),
     path("getGroups", views.getGroups, name="getGroups"),
     path("score", views.score, name="score"),
-    path("newscore", views.newscore, name="newscore")
+    path("newscore", views.newscore, name="newscore"),
+    path("<str:username>", views.profile, name="profile")
 ]

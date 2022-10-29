@@ -1,0 +1,12 @@
+{% extends "trivia/layout.html" %}
+
+{% block body %}
+<div id="leaderboard"><h4>Leader Board for {{profile}}</h4><br>
+
+    {% for score in scores %}
+        {{score.user.username}} score: {{score.numscore}} correct in category: <span style="font-weight:bold;">{{score.group.categoryname}}</span> <br>
+    {% endfor %}
+<br>
+</div>
+
+{% endblock %}
