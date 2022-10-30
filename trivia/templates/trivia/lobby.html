@@ -93,9 +93,12 @@
             console.log(data);
             if (data.numcompleted >= 10) {
                 console.log("completed");
-                document.querySelector("#question").style.display = 'none';
-                document.querySelector('#leaderboard').style.display = 'block';
-                location.reload();
+                document.querySelector("#question").style.display = 'block';
+                document.querySelector('#leaderboard').style.display = 'none';
+                document.querySelector('#nextbutton').style.display='none';
+                document.querySelector("#endbutton").style.display='block';
+
+
             }
         });
     }
@@ -176,7 +179,7 @@
 <div id="correct"></div>
 <div id="incorrect"></div>
 <button onclick="refreshRandom();" id="nextbutton">Next</button>
-
+<button style="display:none;" onclick="location.reload();" id="endbutton">End</button>
 
 
 
