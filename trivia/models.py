@@ -20,7 +20,7 @@ class User(AbstractUser):
     profilepic = models.URLField(null=True)
 
     def __str__(self):
-        return f"{self.username} score: {self.score}"
+        return f"{self.username}"
 
 
 class Scores(models.Model):

@@ -4,12 +4,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        console.log("loaded");
         showgroups();
     });
 
     function showgroups() {
-        console.log("clicked")
         fetch("/getGroups")
             .then(response => response.json())
             .then(groups => {
@@ -39,13 +37,6 @@
             });
     }
 
-    // fetch('/newscore', {
-    //         method: 'PUT',
-    //         body: JSON.stringify({
-    //             groupid: groupid
-    //         })
-    //     })
-
     function del(groupid) {
         id = parseInt(groupid)
         fetch('/delete', {
@@ -57,7 +48,6 @@
         })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data, groupid);
             location.reload();
         })
         

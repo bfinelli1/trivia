@@ -14,7 +14,6 @@
         document.querySelector('#leaderboard').style.display = 'block';
         document.querySelector('#nextbutton').style.display='none';
         document.querySelector('#count').innerHTML = count;
-        console.log("{{categoryid}}");
 
 
     })
@@ -28,7 +27,6 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             gameid = data.id
         });
     }
@@ -37,7 +35,6 @@
         newscore("{{groupid}}");
         document.querySelector('#leaderboard').style.display = 'none';
         document.querySelector("#question").style.display = 'block';
-        console.log("question");
         refreshRandom();
     }
 
@@ -90,9 +87,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             if (data.numcompleted >= 10) {
-                console.log("completed");
                 document.querySelector("#question").style.display = 'block';
                 document.querySelector('#leaderboard').style.display = 'none';
                 document.querySelector('#nextbutton').style.display='none';
@@ -107,10 +102,7 @@
         var givenanswer = document.querySelector('input[name="answers"]:checked').value; 
         document.querySelector('input[name="answers"]:checked').checked = false;
         
-        console.log(givenanswer);
-        console.log(givenanswer, actualanswer+1);
         if (givenanswer == actualanswer+1) {
-            console.log("correct");
             answer(1, gameid);
             document.querySelector("#incorrect").style.display = 'none';
             document.querySelector('#correct').style.display = 'block';

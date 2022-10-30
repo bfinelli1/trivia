@@ -22,11 +22,8 @@ def index(request):
 
 def getGroups(request):
     groups = Group.objects.all()
+    groups = groups.order_by("-id").all()
     return JsonResponse([group.serialize() for group in groups], safe=False)
-
-
-def random(request):
-    return render(request, 'trivia/index.html')
 
 def newgroup(request):
     if request.method == "POST":
@@ -34,18 +31,15 @@ def newgroup(request):
         count=0
 
         categoryids = Group.objects.all().values_list('categoryid', flat=True)
-        print(categoryids)
         qlistlength = 0
         while qlistlength<20 or (categoryid in categoryids) and count < 5: #check if there are too few qs in the category
             response = requests.get("https://jservice.io/api/random")
             categoryid = response.json()[0]['category_id']
             categoryname = response.json()[0]['category']['title']
             questionlist = requests.get(f"https://jservice.io/api/clues?category={categoryid}")
-            print(f"{categoryid} amount in category: {len(questionlist.json())}")
             qlistlength = len(questionlist.json())
             count +=1
-        if count >=5:
-            print("didnt find a category")
+        if count >=10:
             return HttpResponseRedirect(reverse("index"))
         else:
             myGroup = Group()
@@ -72,7 +66,6 @@ def lobby(request):
 def score(request):
     if request.method == "PUT":
         data = json.loads(request.body)
-        print(data.get("number"), data.get("gameid"))
         if data.get("number") is not None:
             score = Scores.objects.get(pk=int(data.get("gameid")))
             score.numscore = score.numscore+int(data.get("number"))
