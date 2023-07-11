@@ -2,6 +2,8 @@
 
 Uses the api from https://jservice.io/
 
+This is a Django app that queries an api and displays jeopardy questions with multiple choice answers. The app also displays a leaderboard for each trivia topic and an individual score area for each user.
+
 TODO:
 display correct or incorrect and correct answer - check
 have profile page with user's leaderboard - check
@@ -17,8 +19,6 @@ psql
 \connect mydb;
 
 Save this answer.
-
-For same error I did something different, well not different but I directly went to psql server(in my case). It happend during the development. So, I was not concious about possible data losses. Select your database. Then, create schema.
 
 CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO postgres;
